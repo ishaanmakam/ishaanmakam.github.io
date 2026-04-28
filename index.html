@@ -293,6 +293,7 @@
       background: linear-gradient(135deg, rgba(0,212,255,0.04) 0%, transparent 60%);
       opacity: 0;
       transition: opacity 0.3s;
+      pointer-events: none;
     }
 
     .project-card:hover::before { opacity: 1; }
@@ -373,6 +374,8 @@
       text-decoration: none;
       margin-top: 16px;
       transition: color 0.2s;
+      position: relative;
+      z-index: 2;
     }
     .card-link:hover { color: var(--accent); }
 
@@ -642,7 +645,7 @@
           <span class="card-metric">60% → 89% accuracy</span>
           <span class="card-metric orange">$15,000 Grand Prize</span>
         </div>
-        <a href="https://indiawest.com/ishaan-makam-among-t-mobile-foundation-changemaker-challenge-winners/">Read more ↗</a>
+        <a href="https://indiawest.com/ishaan-makam-among-t-mobile-foundation-changemaker-challenge-winners/" target="_blank" class="card-link">Read more ↗</a>
       </div>
 
       <div class="project-card small">
