@@ -1,892 +1,402 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ishaan Makam</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #080a0e;
-      --surface: #0d1017;
-      --border: #1a2030;
-      --accent: #00d4ff;
-      --accent2: #ff6b35;
-      --text: #e8edf5;
-      --muted: #5a6478;
-      --card: #0f1520;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Mono', monospace;
-      font-size: 14px;
-      line-height: 1.7;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 1;
-      opacity: 0.4;
-    }
-
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 48px;
-      background: rgba(8,10,14,0.85);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-logo {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 16px;
-      letter-spacing: 0.05em;
-      color: var(--text);
-      text-decoration: none;
-    }
-
-    .nav-logo span { color: var(--accent); }
-
-    .nav-links {
-      display: flex;
-      gap: 32px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 12px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover { color: var(--accent); }
-
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      padding: 120px 48px 80px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-grid {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 70%);
-    }
-
-    .hero-glow {
-      position: absolute;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
-
-    .hero-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      width: 100%;
-      position: relative;
-      z-index: 2;
-    }
-
-    .hero-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid var(--border);
-      padding: 6px 14px;
-      border-radius: 100px;
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 32px;
-      animation: fadeUp 0.6s ease both;
-    }
-
-    .hero-tag::before {
-      content: '';
-      width: 6px; height: 6px;
-      background: var(--accent);
-      border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-
-    .hero-name {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(56px, 9vw, 120px);
-      font-weight: 800;
-      line-height: 0.92;
-      letter-spacing: -0.03em;
-      margin-bottom: 24px;
-      animation: fadeUp 0.6s 0.1s ease both;
-    }
-
-    .hero-name .accent { color: var(--accent); }
-
-    .hero-sub {
-      font-size: 15px;
-      color: var(--muted);
-      max-width: 480px;
-      margin-bottom: 48px;
-      animation: fadeUp 0.6s 0.2s ease both;
-      font-style: italic;
-    }
-
-    .hero-stats {
-      display: flex;
-      gap: 48px;
-      animation: fadeUp 0.6s 0.3s ease both;
-    }
-
-    .stat-num {
-      font-family: 'Syne', sans-serif;
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--text);
-      display: block;
-    }
-    .stat-num .unit { color: var(--accent); font-size: 18px; }
-    .stat-label {
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .hero-cta {
-      display: flex;
-      gap: 16px;
-      margin-top: 48px;
-      animation: fadeUp 0.6s 0.4s ease both;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 24px;
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      text-decoration: none;
-      border-radius: 4px;
-      transition: all 0.2s;
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      color: var(--bg);
-    }
-    .btn-primary:hover {
-      background: #33ddff;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0,212,255,0.3);
-    }
-
-    .btn-ghost {
-      border: 1px solid var(--border);
-      color: var(--muted);
-    }
-    .btn-ghost:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      transform: translateY(-2px);
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    section {
-      padding: 100px 48px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .section-label {
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .section-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-      max-width: 60px;
-    }
-
-    .section-title {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(32px, 4vw, 48px);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 60px;
-      line-height: 1.1;
-    }
-
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 16px;
-    }
-
-    .project-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 32px;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-
-    .project-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(0,212,255,0.04) 0%, transparent 60%);
-      opacity: 0;
-      transition: opacity 0.3s;
-      pointer-events: none;
-    }
-
-    .project-card:hover::before { opacity: 1; }
-    .project-card:hover {
-      border-color: rgba(0,212,255,0.3);
-      transform: translateY(-4px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    }
-
-    .project-card.large { grid-column: span 7; }
-    .project-card.small { grid-column: span 5; }
-    .project-card.medium { grid-column: span 6; }
-
-    .card-tag {
-      font-size: 10px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .card-tag::before {
-      content: '';
-      width: 4px; height: 4px;
-      background: var(--accent);
-      border-radius: 50%;
-    }
-
-    .card-tag.orange { color: var(--accent2); }
-    .card-tag.orange::before { background: var(--accent2); }
-
-    .card-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 12px;
-      line-height: 1.2;
-    }
-
-    .card-desc {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.7;
-      margin-bottom: 24px;
-    }
-
-    .card-metric {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(0,212,255,0.08);
-      border: 1px solid rgba(0,212,255,0.15);
-      padding: 4px 12px;
-      border-radius: 100px;
-      font-size: 11px;
-      color: var(--accent);
-      margin-right: 8px;
-      margin-bottom: 8px;
-    }
-
-    .card-metric.orange {
-      background: rgba(255,107,53,0.08);
-      border-color: rgba(255,107,53,0.15);
-      color: var(--accent2);
-    }
-
-    .card-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-decoration: none;
-      margin-top: 16px;
-      transition: color 0.2s;
-      position: relative;
-      z-index: 2;
-    }
-    .card-link:hover { color: var(--accent); }
-
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 12px;
-    }
-
-    .skill-group {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 20px;
-    }
-
-    .skill-group-label {
-      font-size: 10px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 12px;
-    }
-
-    .skill-items {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .skill-chip {
-      font-size: 11px;
-      padding: 3px 10px;
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      color: var(--muted);
-    }
-
-    .certs-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 12px;
-    }
-
-    .cert-item {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 16px 20px;
-      transition: border-color 0.2s;
-    }
-
-    .cert-item:hover { border-color: rgba(0,212,255,0.3); }
-
-    .cert-icon {
-      width: 36px; height: 36px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      flex-shrink: 0;
-      background: var(--border);
-    }
-
-    .cert-name {
-      font-size: 12px;
-      color: var(--text);
-      line-height: 1.3;
-    }
-    .cert-issuer {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .timeline {
-      position: relative;
-      padding-left: 32px;
-    }
-
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 8px; bottom: 0;
-      width: 1px;
-      background: linear-gradient(to bottom, var(--accent), transparent);
-    }
-
-    .timeline-item {
-      position: relative;
-      margin-bottom: 40px;
-    }
-
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: -36px; top: 6px;
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 12px var(--accent);
-    }
-
-    .timeline-date {
-      font-size: 11px;
-      color: var(--accent);
-      letter-spacing: 0.1em;
-      margin-bottom: 6px;
-    }
-
-    .timeline-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .timeline-org {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    .timeline-desc {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .contact-section {
-      text-align: center;
-      padding: 100px 48px;
-      border-top: 1px solid var(--border);
-      position: relative;
-    }
-
-    .contact-glow {
-      position: absolute;
-      width: 400px; height: 200px;
-      background: radial-gradient(ellipse, rgba(0,212,255,0.06) 0%, transparent 70%);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
-
-    .contact-title {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(36px, 5vw, 64px);
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 16px;
-    }
-
-    .contact-sub {
-      color: var(--muted);
-      margin-bottom: 40px;
-      font-style: italic;
-    }
-
-    .contact-links {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    footer {
-      padding: 24px 48px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 0.05em;
-    }
-
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (max-width: 768px) {
-      nav { padding: 16px 24px; }
-      .nav-links { display: none; }
-      .hero { padding: 100px 24px 60px; }
-      section { padding: 60px 24px; }
-      .hero-stats { gap: 24px; flex-wrap: wrap; }
-      .project-card.large,
-      .project-card.small,
-      .project-card.medium { grid-column: span 12; }
-      footer { flex-direction: column; gap: 8px; text-align: center; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ishaan Makam</title>
+<meta name="description" content="Ishaan Makam — ECE and ACMS at the University of Washington. Rockets, boards, robots, and software that ships.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,300..900;1,62..125,300..900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --board:#0F1B33;--surface:#172A4B;--copper:#D9A05B;--copper-2:#F1C98C;--signal:#56E1FF;--flame:#FF7A3D;
+    --text:#F2F5FA;--muted:#A3B0C6;--dim:#6F7E99;--line:#2A3D63;--w:1160px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--board);color:var(--text);font-family:"Archivo",system-ui,sans-serif;font-size:16px;line-height:1.55;overflow-x:hidden}
+  a{color:var(--signal);text-decoration:none}a:hover{text-decoration:underline}
+  :focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+  h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.02em;font-variation-settings:"wdth" 112}
+  .wrap{max-width:var(--w);margin:0 auto;padding:0 28px;position:relative;z-index:2}
+
+  #board{position:fixed;inset:0;z-index:0;display:block}
+  #vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 70% 60% at 50% 40%, transparent 0%, rgba(15,27,51,.6) 100%)}
+
+  nav{position:sticky;top:0;z-index:10;background:rgba(15,27,51,.78);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:26px;height:58px}
+  nav .home{font-weight:800;color:var(--text);font-variation-settings:"wdth" 118}
+  nav .home:hover{text-decoration:none}
+  nav ul{display:flex;gap:22px;list-style:none;margin:0 0 0 auto;padding:0}
+  nav li a{color:var(--muted);font-size:14px}nav li a:hover{color:var(--text);text-decoration:none}
+
+  #rail{position:fixed;left:0;top:0;bottom:0;width:90px;pointer-events:none;z-index:3}
+  #rail canvas{position:absolute;inset:0;width:100%;height:100%}
+  #rail svg.track{position:absolute;inset:0;width:100%;height:100%}
+  #rail .t{stroke:var(--line);stroke-width:1.5;stroke-dasharray:2 7}
+  #rail .p{stroke:var(--signal);stroke-width:2;filter:drop-shadow(0 0 4px var(--signal))}
+  #rocket{position:absolute;left:0;top:0;width:90px;height:60px;overflow:visible}
+  @media (max-width:980px){#rail{display:none}}
+
+  .hero{padding:80px 0 60px;display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center;min-height:calc(100vh - 58px)}
+  .hero h1{font-size:clamp(58px,8.6vw,128px);line-height:.88;font-variation-settings:"wdth" 120}
+  .hero h1 span{display:block}
+  .hero .lede{font-size:19px;color:var(--muted);max-width:36ch;margin:26px 0 0}
+  .hero .lede b{color:var(--text);font-weight:600}
+  .facts{margin:32px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:14px 26px;max-width:540px}
+  .facts li{border-top:1px solid var(--line);padding-top:10px;font-size:14px;color:var(--muted)}
+  .facts b{display:block;font-size:28px;color:var(--copper-2);font-variation-settings:"wdth" 112;line-height:1.1;letter-spacing:-.01em}
+  .cta{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;padding:11px 18px;border-radius:6px;font-weight:600;font-size:15px;border:1.5px solid var(--copper);color:var(--copper-2);background:rgba(217,160,91,.06)}
+  .btn:hover{text-decoration:none;background:var(--copper);color:var(--board)}
+  .btn.fill{background:var(--signal);border-color:var(--signal);color:var(--board)}
+  .btn.fill:hover{background:#8EEBFF;border-color:#8EEBFF}
+
+  .cell{position:relative;aspect-ratio:1/1;max-height:74vh;border:1px solid var(--line);border-radius:14px;background:rgba(19,34,63,.6);overflow:hidden}
+  .cell svg{width:100%;height:100%;display:block}
+  .cell .hint{position:absolute;left:14px;bottom:12px;font-size:12.5px;color:var(--dim)}
+  .cell .readout{position:absolute;right:14px;top:12px;font-size:12px;color:var(--signal);text-align:right;line-height:1.5;font-variant-numeric:tabular-nums}
+
+  section{padding:90px 0 24px}
+  .head{display:flex;align-items:baseline;gap:18px;margin-bottom:30px;flex-wrap:wrap}
+  .head h2{font-size:clamp(30px,4vw,46px);position:relative;padding-bottom:10px}
+  .head h2::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--copper);transition:width .9s cubic-bezier(.2,.7,.2,1)}
+  .head h2.on::after{width:100%}
+  .head p{margin:0;color:var(--muted)}
+
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+  .chip{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:26px 28px;display:flex;flex-direction:column;gap:10px;transition:transform .25s,border-color .25s}
+  .chip.wide{grid-column:1/-1}
+  .chip::before,.chip::after{content:"";position:absolute;top:18px;bottom:18px;width:6px;background:repeating-linear-gradient(to bottom,var(--copper) 0 8px,transparent 8px 20px);opacity:.7}
+  .chip::before{left:-7px;border-radius:2px 0 0 2px}.chip::after{right:-7px;border-radius:0 2px 2px 0}
+  .chip:hover{transform:translateY(-3px);border-color:var(--copper)}
+  .chip svg.pulse{position:absolute;inset:-1px;width:calc(100% + 2px);height:calc(100% + 2px);pointer-events:none;border-radius:10px}
+  .chip svg.pulse rect{fill:none;stroke:var(--signal);stroke-width:2;stroke-dasharray:120 2000;stroke-dashoffset:2120;opacity:0;filter:drop-shadow(0 0 4px var(--signal))}
+  .chip:hover svg.pulse rect{opacity:1;animation:run 1.4s linear infinite}
+  @keyframes run{to{stroke-dashoffset:0}}
+  .chip .top{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap}
+  .chip h3{font-size:22px;line-height:1.15;flex:1}
+  .chip .kind{font-size:13.5px;color:var(--muted);margin:2px 0 0}
+  .chip .award{font-size:12.5px;font-weight:600;color:var(--flame);background:rgba(255,122,61,.12);border:1px solid rgba(255,122,61,.35);padding:3px 10px;border-radius:999px}
+  .chip p{margin:0;color:var(--muted);font-size:15px;max-width:72ch}
+  .chip .nums{display:flex;gap:22px;flex-wrap:wrap;margin-top:4px}
+  .chip .nums span{font-size:13.5px;color:var(--muted)}
+  .chip .nums b{font-size:21px;font-weight:800;color:var(--copper-2);display:block;font-variation-settings:"wdth" 112;line-height:1.1}
+  .chip .stack{font-size:13px;color:var(--dim)}
+  .chip .links{display:flex;gap:16px;font-size:14px;margin-top:2px}
+
+  .job{display:grid;grid-template-columns:150px 1fr;gap:24px;padding:22px 0;border-top:1px solid var(--line)}
+  .job:last-child{border-bottom:1px solid var(--line)}
+  .job .when{color:var(--copper);font-size:14px;padding-top:4px}
+  .job h3{font-size:19px}
+  .job .org{color:var(--muted);font-size:15px;margin:2px 0 8px}
+  .job p{margin:0;color:var(--muted);font-size:15px;max-width:68ch}
+
+  .skills{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px 34px}
+  .skills h3{font-size:13.5px;color:var(--copper);font-weight:600;margin-bottom:6px;font-variation-settings:"wdth" 100}
+  .skills p{margin:0;font-size:15px;line-height:1.7;color:var(--muted)}
+  .certs{margin-top:32px;display:flex;flex-wrap:wrap;gap:8px}
+  .certs span{border:1px solid var(--line);background:rgba(23,42,75,.7);border-radius:999px;padding:5px 12px;font-size:13.5px;color:var(--muted)}
+
+  .contact{padding:90px 0 60px}
+  .contact h2{font-size:clamp(34px,5vw,60px);max-width:17ch;line-height:1}
+  .contact p{color:var(--muted);font-size:17px;margin:18px 0 26px;max-width:50ch}
+  footer{border-top:1px solid var(--line);padding:20px 0 34px;color:var(--dim);font-size:13px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+  @media (max-width:860px){
+    nav ul{display:none}
+    .hero{grid-template-columns:1fr;min-height:0;padding-top:48px}
+    .cell{max-height:none}
+    .grid{grid-template-columns:1fr}
+    .chip::before,.chip::after{display:none}
+    .job{grid-template-columns:1fr;gap:4px}
+    .skills{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:520px){.skills{grid-template-columns:1fr}}
+  @media (prefers-reduced-motion:reduce){
+    .chip:hover svg.pulse rect{animation:none;opacity:0}
+    .head h2::after{transition:none}
+  }
+</style>
 </head>
 <body>
 
-  <nav>
-    <a href="#" class="nav-logo">IM<span>.</span></a>
-    <ul class="nav-links">
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#experience">Experience</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </nav>
+<canvas id="board" aria-hidden="true"></canvas>
+<div id="vignette" aria-hidden="true"></div>
 
-  <div class="hero">
-    <div class="hero-grid"></div>
-    <div class="hero-glow"></div>
-    <div class="hero-content">
-      <div class="hero-tag">Bellevue, WA · Open to opportunities</div>
-      <h1 class="hero-name">
-        Ishaan<br><span class="accent">Makam</span>
-      </h1>
-      <p class="hero-sub">
-        Aerospace engineer + software builder. Founded my first company at 15. Published independent research at 17. Building things that actually ship.
-      </p>
-      <div class="hero-stats">
-        <div class="stat-item">
-          <span class="stat-num">$15<span class="unit">K</span></span>
-          <span class="stat-label">T-Mobile Grand Prize</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num">3<span class="unit">rd</span></span>
-          <span class="stat-label">MIT URTC / 191 teams</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num">60<span class="unit">+</span></span>
-          <span class="stat-label">Students taught rocketry</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num">89<span class="unit">%</span></span>
-          <span class="stat-label">TerraCan accuracy</span>
-        </div>
-      </div>
-      <div class="hero-cta">
-        <a href="mailto:ishaan.makam@gmail.com" class="btn btn-primary">Get in touch →</a>
-        <a href="https://github.com/ishaanmakam" target="_blank" class="btn btn-ghost">GitHub ↗</a>
+<nav><div class="wrap">
+  <a class="home" href="#top">Ishaan Makam</a>
+  <ul><li><a href="#projects">Projects</a></li><li><a href="#experience">Experience</a></li><li><a href="#skills">Skills</a></li><li><a href="#contact">Contact</a></li></ul>
+</div></nav>
+
+<div id="rail" aria-hidden="true">
+  <svg class="track" viewBox="0 0 90 1000" preserveAspectRatio="none"><line class="t" x1="45" y1="0" x2="45" y2="1000"/><line class="p" id="prog" x1="45" y1="0" x2="45" y2="0"/></svg>
+  <canvas id="exhaust"></canvas>
+  <svg id="rocket" viewBox="0 0 90 60"><g transform="translate(45 8)">
+    <path d="M0 0 L8 16 L8 30 L-8 30 L-8 16 Z" fill="#F2F5FA"/>
+    <path d="M-8 22 L-15 32 L-8 30 Z M8 22 L15 32 L8 30 Z" fill="#D9A05B"/>
+    <circle cx="0" cy="16" r="2.6" fill="#0F1B33"/>
+    <rect x="-5" y="30" width="10" height="4" fill="#56E1FF"/>
+  </g></svg>
+</div>
+
+<main id="top" class="wrap">
+  <header class="hero">
+    <div>
+      <h1><span>Ishaan</span><span>Makam</span></h1>
+      <p class="lede">I design boards, build rockets, and write the software that runs them. <b>Electrical &amp; computer engineering</b> and <b>applied &amp; computational mathematical sciences</b> at the University of Washington.</p>
+      <ul class="facts">
+        <li><b data-count="15000" data-prefix="$">$0</b>T-Mobile Changemaker grand prize, TerraCan</li>
+        <li><b data-count="3" data-suffix="rd of 191">0</b>MIT IEEE URTC, published sole author</li>
+        <li><b data-count="38" data-suffix=" of 1,200">0</b>American Rocketry Challenge national finals</li>
+        <li><b data-count="72" data-suffix=" kids">0</b>one summer at Camp Liftoff, the nonprofit I founded</li>
+      </ul>
+      <div class="cta">
+        <a class="btn fill" href="mailto:ishaan.makam@gmail.com">Email me</a>
+        <a class="btn" href="https://github.com/ishaanmakam" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn" href="https://linkedin.com/in/ishaanmakam" target="_blank" rel="noopener">LinkedIn</a>
       </div>
     </div>
-  </div>
+
+    <figure class="cell" aria-label="A robot arm soldering pads on a circuit board. Move your cursor to steer it.">
+      <svg id="arm" viewBox="0 0 520 520">
+        <defs><radialGradient id="glow"><stop offset="0" stop-color="#56E1FF" stop-opacity=".9"/><stop offset="1" stop-color="#56E1FF" stop-opacity="0"/></radialGradient></defs>
+        <g id="work" transform="translate(60 300)">
+          <rect x="0" y="0" width="400" height="170" rx="8" fill="#0C1730" stroke="#2A3D63"/>
+          <g id="traces" fill="none" stroke="#D9A05B" stroke-opacity=".5" stroke-width="2"></g>
+          <g id="pads"></g>
+          <rect x="150" y="50" width="100" height="70" rx="4" fill="#172A4B" stroke="#2A3D63"/>
+          <text x="200" y="90" text-anchor="middle" fill="#A3B0C6" font-size="11" font-family="Archivo">TERRACAN v4</text>
+        </g>
+        <g id="armg">
+          <circle cx="90" cy="90" r="26" fill="#172A4B" stroke="#2A3D63" stroke-width="2"/>
+          <line id="l1" x1="90" y1="90" x2="90" y2="90" stroke="#F2F5FA" stroke-width="16" stroke-linecap="round"/>
+          <circle cx="90" cy="90" r="11" fill="#0F1B33" stroke="#D9A05B" stroke-width="3"/>
+          <line id="l2" x1="90" y1="90" x2="90" y2="90" stroke="#D9A05B" stroke-width="11" stroke-linecap="round"/>
+          <circle id="j2" cx="90" cy="90" r="8" fill="#0F1B33" stroke="#F2F5FA" stroke-width="3"/>
+          <line id="tool" x1="0" y1="0" x2="0" y2="0" stroke="#56E1FF" stroke-width="3" stroke-linecap="round"/>
+          <circle id="tip" cx="0" cy="0" r="14" fill="url(#glow)" opacity="0"/>
+        </g>
+        <g id="sparks"></g>
+      </svg>
+      <div class="readout" id="readout"></div>
+      <div class="hint">Move your cursor to steer the arm. Leave it alone and it goes back to soldering.</div>
+    </figure>
+  </header>
 
   <section id="projects">
-    <div class="section-label">What I've built</div>
-    <h2 class="section-title">Projects & Research</h2>
-    <div class="projects-grid reveal">
-      <div class="project-card large">
-        <div class="card-tag">AI · Computer Vision · iOS</div>
-        <div class="card-title">TerraCan</div>
-        <p class="card-desc">Real-time waste sorting system using a TensorFlow/Keras CNN and camera module to automatically classify household waste. Iterated through 4 hardware versions, built the full iOS app in Swift with Bluetooth integration.</p>
-        <div>
-          <span class="card-metric">60% → 89% accuracy</span>
-          <span class="card-metric orange">$15,000 Grand Prize</span>
-        </div>
-        <a href="https://indiawest.com/ishaan-makam-among-t-mobile-foundation-changemaker-challenge-winners/" target="_blank" class="card-link">Read more ↗</a>
-      </div>
+    <div class="head"><h2>Projects</h2><p>Hardware first. Software when the hardware needs it.</p></div>
+    <div class="grid">
+      <article class="chip wide"><svg class="pulse"><rect x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)" rx="10"/></svg>
+        <div class="top"><div><h3>TerraCan</h3><p class="kind">Camera module and CNN that flags wrong-bin waste in real time</p></div><span class="award">$15,000 T-Mobile grand prize</span></div>
+        <p>A camera over the bin classifies each item dropped in and flags anything sorted wrong. I designed the camera-module PCB in KiCad, took it through four revisions, trained the TensorFlow model, and wrote the Swift app that pairs over Bluetooth. Piloted in Bellevue Public Schools.</p>
+        <div class="nums"><span><b>60% → 89%</b>accuracy</span><span><b>4</b>board revisions</span></div>
+        <p class="stack">KiCad, TensorFlow, Swift, BLE</p>
+        <div class="links"><a href="https://indiawest.com/ishaan-makam-among-t-mobile-foundation-changemaker-challenge-winners/" target="_blank" rel="noopener">Press coverage</a></div>
+      </article>
 
-      <div class="project-card small">
-        <div class="card-tag orange">Nonprofit · 501(c)(3)</div>
-        <div class="card-title">Camp Liftoff</div>
-        <p class="card-desc">Founded an aerospace summer camp teaching rocketry, CAD, and flight dynamics to middle schoolers from underserved communities. Grew from 10 to 60+ students across two campuses.</p>
-        <div>
-          <span class="card-metric">60+ students</span>
-          <span class="card-metric">$10K+ raised</span>
-        </div>
-        <a href="https://campliftoff.com" target="_blank" class="card-link">Visit site ↗</a>
-      </div>
+      <article class="chip"><svg class="pulse"><rect x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)" rx="10"/></svg>
+        <div class="top"><div><h3>Bio-inspired rocket fins</h3><p class="kind">Published CFD research, sole author</p></div><span class="award">3rd of 191, MIT URTC</span></div>
+        <p>Shark-skin riblets and humpback-whale tubercles on rocket fins, simulated in Ansys Fluent across subsonic and supersonic flow against a smooth control. Published in the <em>Journal of High School Science</em>, 19% acceptance.</p>
+        <div class="nums"><span><b>8–12%</b>less drag</span><span><b>2 years</b>of work</span></div>
+        <div class="links"><a href="https://jhss.scholasticahq.com/article/144090" target="_blank" rel="noopener">Read the paper</a><a href="https://doi.org/10.64336/001c.144090" target="_blank" rel="noopener">DOI</a></div>
+      </article>
 
-      <div class="project-card medium">
-        <div class="card-tag">Python · Ansible · Networking</div>
-        <div class="card-title">Network Automation & Cybersecurity</div>
-        <p class="card-desc">Python + Ansible pipeline for automated network monitoring, DDoS detection, and vulnerability scanning. Wrote Netmiko scripts to automate WAP migrations and VLAN audits.</p>
-        <div>
-          <span class="card-metric">30% faster detection</span>
-        </div>
-        <a href="https://github.com/ishaanmakam" target="_blank" class="card-link">View on GitHub ↗</a>
-      </div>
+      <article class="chip"><svg class="pulse"><rect x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)" rx="10"/></svg>
+        <div class="top"><div><h3>Manifest</h3><p class="kind">Application tracker anyone can use</p></div></div>
+        <p>Every application, every essay prompt, and what you wrote, in one place. Sign in, paste a doc, and it splits prompts from answers automatically. Each person sees only their own data.</p>
+        <p class="stack">JavaScript, Supabase auth and Postgres, row-level security</p>
+        <div class="links"><a href="https://manifest-nine-smoky.vercel.app" target="_blank" rel="noopener">Open Manifest</a><a href="https://github.com/ishaanmakam/Manifest" target="_blank" rel="noopener">Source</a></div>
+      </article>
 
-      <div class="project-card medium">
-        <div class="card-tag">ANSYS · CFD · Published</div>
-        <div class="card-title">Bio-Inspired Rocket Aerodynamics</div>
-        <p class="card-desc">Investigated shark-skin riblets and whale tubercles to reduce rocket drag. CFD simulations in ANSYS Fluent. Published as sole author in Journal of High School Science (19% acceptance rate).</p>
-        <div>
-          <span class="card-metric">8–12% drag reduction</span>
-          <span class="card-metric orange">MIT URTC 3rd / 191</span>
-        </div>
-        <a href="https://github.com/ishaanmakam" target="_blank" class="card-link">View on GitHub ↗</a>
-      </div>
+      <article class="chip"><svg class="pulse"><rect x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)" rx="10"/></svg>
+        <div class="top"><div><h3>Congressional trade clusters</h3><p class="kind">Data pipeline and public dashboard</p></div></div>
+        <p>Normalizes semi-structured Senate financial disclosures into a queryable dataset, then clusters trades to surface coordinated patterns across members and time windows.</p>
+        <p class="stack">Python, Pandas, GitHub Pages</p>
+        <div class="links"><a href="https://ishaanmakam.github.io/congress-trade-clusters" target="_blank" rel="noopener">Live dashboard</a></div>
+      </article>
 
-      <div class="project-card small">
-        <div class="card-tag">Python · QGIS</div>
-        <div class="card-title">Noise Contour Modeling</div>
-        <p class="card-desc">Modeled airport noise exposure using terrain elevation and land use data. Validated against FAA Part 150 reference data.</p>
-        <a href="https://github.com/ishaanmakam" target="_blank" class="card-link">View on GitHub ↗</a>
-      </div>
+      <article class="chip"><svg class="pulse"><rect x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)" rx="10"/></svg>
+        <div class="top"><div><h3>Ishblendz</h3><p class="kind">My barbershop, since 2023</p></div></div>
+        <p>I taught myself to cut hair in 2021, starting with family and friends. Now Ishblendz has 100+ regular clients who come back because I ask what they actually want before I pick up the clippers. There is no undo button on a fade.</p>
+        <div class="nums"><span><b>100+</b>recurring clients</span><span><b>3 years</b>running</span></div>
+      </article>
 
-      <div class="project-card large">
-        <div class="card-tag">JavaScript · Algorithms</div>
-        <div class="card-title">JavaScript Algorithms</div>
-        <p class="card-desc">Five algorithm projects for the freeCodeCamp JavaScript Algorithms & Data Structures certification — Palindrome Checker, Roman Numeral Converter, Caesar's Cipher, Telephone Number Validator, and Cash Register.</p>
-        <a href="https://github.com/ishaanmakam/javascript-algorithms" target="_blank" class="card-link">View on GitHub ↗</a>
-      </div>
+      <article class="chip"><svg class="pulse"><rect x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)" rx="10"/></svg>
+        <div class="top"><div><h3>Network monitoring</h3><p class="kind">Anomaly and vulnerability detection on a live network</p></div></div>
+        <p>Python and Ansible pipeline that inventories devices, runs vulnerability scans, and parses real-time logs to flag anomalous traffic and DDoS activity. Netmiko scripts automate access-point migrations and VLAN audits.</p>
+        <div class="nums"><span><b>30%</b>faster detection</span></div>
+        <p class="stack">Python, Ansible, Netmiko, Nmap</p>
+      </article>
     </div>
   </section>
 
   <section id="experience">
-    <div class="section-label">Where I've been</div>
-    <h2 class="section-title">Experience</h2>
-    <div class="timeline reveal">
-      <div class="timeline-item">
-        <div class="timeline-date">Summer 2025</div>
-        <div class="timeline-title">Mechanical Engineering Intern</div>
-        <div class="timeline-org">Hermanson Heavy Metal · Seattle, WA</div>
-        <div class="timeline-desc">TIG-welded 10+ structural joints and fabricated 6 sheet-metal components for a live hospital construction project. Designed subassemblies in SolidWorks and Revit to catch interference issues before installation.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-date">Dec 2023 – Present</div>
-        <div class="timeline-title">Founder & President — Camp Liftoff</div>
-        <div class="timeline-org">501(c)(3) Nonprofit · Bellevue, WA</div>
-        <div class="timeline-desc">Founded a 6-week aerospace summer camp, grew from 10 to 30+ students, recruited 12 volunteer coaches, and secured $10,000+ from Blue Origin and T-Mobile. Second chapter at Tyee Middle School qualified for TARC Nationals 2026.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-date">Sept 2023 – Present</div>
-        <div class="timeline-title">Math Tutor</div>
-        <div class="timeline-org">Russian School of Math · Factoria, WA</div>
-        <div class="timeline-desc">Taught 200+ students from Algebra through Calculus BC. Brought a struggling student from a C to an A in one semester. Mentored 3 new tutors and led AMC 8/10 competition prep.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-date">Aug 2022 – Present</div>
-        <div class="timeline-title">Team Captain & Treasurer — Newport Rocketry</div>
-        <div class="timeline-org">Newport High School · Bellevue, WA</div>
-        <div class="timeline-desc">Managed a $22,000+ budget for 70+ members. Engineered a force ejection sensor with 90% parachute deployment accuracy across 40+ launches. Qualified teams for TARC Nationals 2025 and 2026.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-date">2024 – Present</div>
-        <div class="timeline-title">Program Coordinator — Seattle Science Lab SROP</div>
-        <div class="timeline-org">Seattle, WA</div>
-        <div class="timeline-desc">Directed a 16-student, 12-week research program. Built a mentor-pairing system and helped raise $9,000 in STEM grants to expand access to Title I schools.</div>
-      </div>
+    <div class="head"><h2>Experience</h2><p>Where the work happened.</p></div>
+    <div>
+      <div class="job"><div class="when">Summer 2025</div><div><h3>Engineering intern</h3><p class="org">Hermanson Company, Seattle</p><p>Modeled subassemblies in SolidWorks and Revit to catch interference before installation on a live hospital construction project, then fabricated sheet metal and installed systems under journeymen. Design in the morning, ceilings in the afternoon.</p></div></div>
+      <div class="job"><div class="when">2023 – present</div><div><h3>Founder and CEO</h3><p class="org">Camp Liftoff, 501(c)(3)</p><p>Aerospace summer camp teaching rocketry, CAD, and flight simulation to middle schoolers. Scaled from 10 to 72 students, raised $10,000+ from Blue Origin and T-Mobile, trained 12 coaches and 5 executives, and handed operations to a successor team.</p></div></div>
+      <div class="job"><div class="when">2023 – present</div><div><h3>Mathematics instructor</h3><p class="org">Russian School of Mathematics, Factoria</p><p>500+ K–12 students from Algebra through Calculus BC, plus AMC 8/10 competition prep. Wrote the Algebra 2 curriculum and mentored three new instructors.</p></div></div>
+      <div class="job"><div class="when">2022 – 2026</div><div><h3>CAD lead and treasurer</h3><p class="org">Newport High School Rocketry</p><p>50+ rockets over four years: nose cones, transitions, rail guides, fin cans, and the flight-computer mount in Onshape. Managed a $16,000 budget. Placed 38th of 1,200 teams at The American Rocketry Challenge national finals.</p></div></div>
+      <div class="job"><div class="when">2023 – 2025</div><div><h3>Engineering volunteer lead</h3><p class="org">Bridge Ministries, Bellevue</p><p>Repaired and distributed 50+ mobility devices for low-income seniors, designed CAD replacement parts for discontinued components, and built a triage system so urgent repairs went first.</p></div></div>
     </div>
   </section>
 
   <section id="skills">
-    <div class="section-label">What I use</div>
-    <h2 class="section-title">Skills & Certifications</h2>
-    <div class="skills-grid reveal" style="margin-bottom: 60px;">
-      <div class="skill-group">
-        <div class="skill-group-label">Languages</div>
-        <div class="skill-items">
-          <span class="skill-chip">Python</span>
-          <span class="skill-chip">Swift</span>
-          <span class="skill-chip">Java</span>
-          <span class="skill-chip">JavaScript</span>
-          <span class="skill-chip">MATLAB</span>
-          <span class="skill-chip">Bash</span>
-        </div>
-      </div>
-      <div class="skill-group">
-        <div class="skill-group-label">ML / CV</div>
-        <div class="skill-items">
-          <span class="skill-chip">TensorFlow</span>
-          <span class="skill-chip">Keras</span>
-          <span class="skill-chip">CoreML</span>
-          <span class="skill-chip">OpenCV</span>
-        </div>
-      </div>
-      <div class="skill-group">
-        <div class="skill-group-label">Networking</div>
-        <div class="skill-items">
-          <span class="skill-chip">Ansible</span>
-          <span class="skill-chip">Netmiko</span>
-          <span class="skill-chip">Nmap</span>
-          <span class="skill-chip">Wireshark</span>
-        </div>
-      </div>
-      <div class="skill-group">
-        <div class="skill-group-label">CAD / Sim</div>
-        <div class="skill-items">
-          <span class="skill-chip">SolidWorks</span>
-          <span class="skill-chip">Fusion 360</span>
-          <span class="skill-chip">Onshape</span>
-          <span class="skill-chip">ANSYS Fluent</span>
-          <span class="skill-chip">OpenRocket</span>
-        </div>
-      </div>
-      <div class="skill-group">
-        <div class="skill-group-label">Fabrication</div>
-        <div class="skill-items">
-          <span class="skill-chip">TIG Welding</span>
-          <span class="skill-chip">Soldering</span>
-          <span class="skill-chip">Laser Cutter</span>
-          <span class="skill-chip">Composites</span>
-          <span class="skill-chip">PCB Design</span>
-        </div>
-      </div>
-      <div class="skill-group">
-        <div class="skill-group-label">Other</div>
-        <div class="skill-items">
-          <span class="skill-chip">Git</span>
-          <span class="skill-chip">QGIS</span>
-          <span class="skill-chip">Figma</span>
-          <span class="skill-chip">Arduino</span>
-          <span class="skill-chip">Xcode</span>
-        </div>
-      </div>
+    <div class="head"><h2>Skills</h2><p>What I reach for.</p></div>
+    <div class="skills">
+      <div><h3>Languages</h3><p>C, C++, Python, Java, TypeScript, Swift, SQL, MATLAB</p></div>
+      <div><h3>Hardware</h3><p>KiCad schematic and layout, LTSpice, PCB revision and bring-up, BLE, soldering, Arduino</p></div>
+      <div><h3>Mechanical</h3><p>SolidWorks, Onshape, Fusion 360, Revit, Ansys Fluent, OpenRocket, TIG welding, sheet metal, composites</p></div>
+      <div><h3>Software</h3><p>Next.js, React, PostgreSQL, Supabase, FastAPI, Git, Linux</p></div>
+      <div><h3>Data and ML</h3><p>Pandas, NumPy, TensorFlow, Keras, scikit-learn</p></div>
+      <div><h3>Networking</h3><p>Ansible, Netmiko, Nmap, Wireshark</p></div>
     </div>
+    <div class="certs"><span>Cisco CCNA</span><span>CompTIA Security+</span><span>NAR Level 2 High-Power Rocketry</span><span>Washington Aerospace Scholar</span><span>Kaggle Python, SQL, ML</span><span>AIME qualifier</span><span>NASA Artemis ROADS semifinalist</span></div>
+  </section>
 
-    <div class="certs-grid reveal">
-      <div class="cert-item">
-        <div class="cert-icon">🌐</div>
-        <div class="cert-info">
-          <div class="cert-name">Cisco Certified Network Associate</div>
-          <div class="cert-issuer">Cisco · CCNA</div>
-        </div>
-      </div>
-      <div class="cert-item">
-        <div class="cert-icon">🔒</div>
-        <div class="cert-info">
-          <div class="cert-name">CompTIA Security+</div>
-          <div class="cert-issuer">CompTIA</div>
-        </div>
-      </div>
-      <div class="cert-item">
-        <div class="cert-icon">🤖</div>
-        <div class="cert-info">
-          <div class="cert-name">AI/ML · Python · Pandas · SQL</div>
-          <div class="cert-issuer">Kaggle</div>
-        </div>
-      </div>
-      <div class="cert-item">
-        <div class="cert-icon">🛡️</div>
-        <div class="cert-info">
-          <div class="cert-name">Cybersecurity</div>
-          <div class="cert-issuer">TryHackMe</div>
-        </div>
-      </div>
-      <div class="cert-item">
-        <div class="cert-icon">⚡</div>
-        <div class="cert-info">
-          <div class="cert-name">JavaScript Algorithms & Data Structures</div>
-          <div class="cert-issuer">freeCodeCamp</div>
-        </div>
-      </div>
-      <div class="cert-item">
-        <div class="cert-icon">🚀</div>
-        <div class="cert-info">
-          <div class="cert-name">NAR Level 2 High-Power Rocketry</div>
-          <div class="cert-issuer">National Association of Rocketry</div>
-        </div>
-      </div>
-      <div class="cert-item">
-        <div class="cert-icon">✈️</div>
-        <div class="cert-info">
-          <div class="cert-name">Washington Aerospace Scholar</div>
-          <div class="cert-issuer">Museum of Flight / UW</div>
-        </div>
-      </div>
-      <div class="cert-item">
-        <div class="cert-icon">☕</div>
-        <div class="cert-info">
-          <div class="cert-name">Legacy Java Certification</div>
-          <div class="cert-issuer">freeCodeCamp</div>
-        </div>
-      </div>
+  <section class="contact" id="contact">
+    <h2>If you're building something that has to survive the real world, I want in.</h2>
+    <p>Open to internships and research for Summer 2027 in robotics, propulsion, and hardware. Seattle, or wherever the project is.</p>
+    <div class="cta">
+      <a class="btn fill" href="mailto:ishaan.makam@gmail.com">ishaan.makam@gmail.com</a>
+      <a class="btn" href="https://github.com/ishaanmakam" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn" href="https://linkedin.com/in/ishaanmakam" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn" href="https://campliftoff.com" target="_blank" rel="noopener">Camp Liftoff</a>
     </div>
   </section>
 
-  <div class="contact-section" id="contact">
-    <div class="contact-glow"></div>
-    <p class="section-label" style="justify-content:center; margin-bottom:16px;">Let's talk</p>
-    <h2 class="contact-title">Get in touch<span style="color:var(--accent)">.</span></h2>
-    <p class="contact-sub">Open to internships, research collabs, and conversations about aerospace + software.</p>
-    <div class="contact-links">
-      <a href="mailto:ishaan.makam@gmail.com" class="btn btn-primary">ishaan.makam@gmail.com</a>
-      <a href="https://github.com/ishaanmakam" target="_blank" class="btn btn-ghost">GitHub ↗</a>
-      <a href="https://linkedin.com/in/ishaanmakam" target="_blank" class="btn btn-ghost">LinkedIn ↗</a>
-      <a href="https://campliftoff.com" target="_blank" class="btn btn-ghost">Camp Liftoff ↗</a>
-    </div>
-  </div>
+  <footer><span>© 2026 Ishaan Makam</span><span>Bellevue, WA</span></footer>
+</main>
 
-  <footer>
-    <span>© 2026 Ishaan Makam</span>
-    <span>Bellevue, WA</span>
-  </footer>
+<script>
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const mouse = {x:-9999,y:-9999};
+addEventListener('pointermove', e=>{mouse.x=e.clientX;mouse.y=e.clientY;}, {passive:true});
 
-  <script>
-    const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          observer.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.1 });
-    reveals.forEach(el => observer.observe(el));
-  </script>
+/* 1. Live PCB behind the page: copper traces on a 45° grid, cyan signals running along them, traces near the cursor light up */
+(function(){
+  const c=document.getElementById('board'), ctx=c.getContext('2d');
+  let W,H,traces=[],pads=[];
+  const GRID=22, dirs=[[1,0],[0,1],[-1,0],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+  function build(){
+    const dpr=Math.min(devicePixelRatio||1,2); W=innerWidth; H=innerHeight; c.width=W*dpr; c.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    traces=[]; pads=[];
+    const cols=Math.ceil(W/GRID), rows=Math.ceil(H/GRID)+2, n=Math.round((W*H)/24000);
+    for(let i=0;i<n;i++){
+      let x=Math.floor(Math.random()*cols), y=Math.floor(Math.random()*rows), d=dirs[Math.floor(Math.random()*8)];
+      const pts=[[x*GRID,y*GRID]]; const steps=6+Math.floor(Math.random()*14);
+      for(let s=0;s<steps;s++){
+        const len=1+Math.floor(Math.random()*5); x+=d[0]*len; y+=d[1]*len;
+        if(x<0||y<0||x>cols||y>rows) break;
+        pts.push([x*GRID,y*GRID]);
+        if(Math.random()<.6){ const di=dirs.findIndex(v=>v[0]===d[0]&&v[1]===d[1]); d=dirs[(di+(Math.random()<.5?1:7))%8]; }
+      }
+      if(pts.length<3) continue;
+      let L=0; const seg=[]; for(let k=1;k<pts.length;k++){ const l=Math.hypot(pts[k][0]-pts[k-1][0],pts[k][1]-pts[k-1][1]); seg.push(l); L+=l; }
+      traces.push({pts,seg,L,t:Math.random()*L,v:40+Math.random()*90,w:1+Math.random()*1.2});
+      pads.push(pts[0],pts[pts.length-1]);
+    }
+  }
+  function pointAt(tr,d){ let acc=0; for(let k=0;k<tr.seg.length;k++){ if(d<=acc+tr.seg[k]){ const f=(d-acc)/tr.seg[k],a=tr.pts[k],b=tr.pts[k+1]; return [a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f]; } acc+=tr.seg[k]; } return tr.pts[tr.pts.length-1]; }
+  let last=performance.now();
+  function frame(now){
+    const dt=Math.min(.05,(now-last)/1000); last=now;
+    ctx.clearRect(0,0,W,H);
+    const oy=-((scrollY*.12)%GRID);
+    ctx.save(); ctx.translate(0,oy);
+    for(const tr of traces){
+      let near=0; for(let k=0;k<tr.pts.length;k+=2){ const dx=tr.pts[k][0]-mouse.x, dy=tr.pts[k][1]+oy-mouse.y, d=dx*dx+dy*dy; if(d<36000) near=Math.max(near,1-d/36000); }
+      ctx.lineWidth=tr.w; ctx.lineJoin='round'; ctx.lineCap='round';
+      ctx.strokeStyle=`rgba(217,160,91,${.17+near*.55})`;
+      ctx.beginPath(); ctx.moveTo(tr.pts[0][0],tr.pts[0][1]); for(let k=1;k<tr.pts.length;k++) ctx.lineTo(tr.pts[k][0],tr.pts[k][1]); ctx.stroke();
+      if(!reduce){
+        tr.t+=tr.v*(1+near*2)*dt; if(tr.t>tr.L+30) tr.t=-30;
+        const a=pointAt(tr,Math.max(0,tr.t-18)), b=pointAt(tr,Math.min(tr.L,tr.t));
+        ctx.strokeStyle=`rgba(86,225,255,${.55+near*.45})`; ctx.lineWidth=tr.w+.6; ctx.shadowColor='#56E1FF'; ctx.shadowBlur=8+near*10;
+        ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke(); ctx.shadowBlur=0;
+      }
+    }
+    ctx.fillStyle='rgba(217,160,91,.35)';
+    for(const p of pads){ ctx.beginPath(); ctx.arc(p[0],p[1],2.6,0,7); ctx.fill(); }
+    ctx.restore();
+    requestAnimationFrame(frame);
+  }
+  build(); addEventListener('resize',build); requestAnimationFrame(frame);
+})();
+
+/* 2. Two-link robot arm, inverse kinematics, follows the cursor or solders pads on its own */
+(function(){
+  const svg=document.getElementById('arm'), pt=svg.createSVGPoint();
+  const base={x:90,y:90}, L1=200, L2=170;
+  const l1=document.getElementById('l1'), l2=document.getElementById('l2'), j2=document.getElementById('j2'), tool=document.getElementById('tool'), tip=document.getElementById('tip'), sparks=document.getElementById('sparks'), readout=document.getElementById('readout');
+  const padsG=document.getElementById('pads'), tracesG=document.getElementById('traces'); const padList=[];
+  for(let i=0;i<9;i++){ const x=30+i*42;
+    padsG.insertAdjacentHTML('beforeend',`<circle cx="${x}" cy="25" r="5" fill="#0F1B33" stroke="#D9A05B" stroke-width="2"/><circle cx="${x}" cy="145" r="5" fill="#0F1B33" stroke="#D9A05B" stroke-width="2"/>`);
+    const tx=x<200?Math.min(x+20,150):Math.max(x-20,250);
+    tracesG.insertAdjacentHTML('beforeend',`<path d="M${x} 25 L${x} 40 L${tx} 40 L${tx} 50"/><path d="M${x} 145 L${x} 130 L${tx} 130 L${tx} 120"/>`);
+    padList.push({x:x+60,y:25+300},{x:x+60,y:145+300}); }
+  let target={x:300,y:330}, cur={x:300,y:330}, mode='auto', idleT=0, nextPad=0, holdT=0;
+  addEventListener('pointermove',e=>{ const r=svg.getBoundingClientRect(); if(e.clientX<r.left-60||e.clientX>r.right+60||e.clientY<r.top-60||e.clientY>r.bottom+60) return; pt.x=e.clientX; pt.y=e.clientY; const p=pt.matrixTransform(svg.getScreenCTM().inverse()); target={x:Math.max(30,Math.min(500,p.x)),y:Math.max(60,Math.min(490,p.y))}; mode='manual'; idleT=0; },{passive:true});
+  let last=performance.now();
+  function step(now){
+    const dt=Math.min(.05,(now-last)/1000); last=now;
+    idleT+=dt; if(mode==='manual'&&idleT>2.2) mode='auto';
+    if(mode==='auto'){ const p=padList[nextPad]; target={x:p.x,y:p.y-22}; if(Math.hypot(cur.x-target.x,cur.y-target.y)<3){ holdT+=dt; if(holdT>.5){ holdT=0; nextPad=(nextPad+1)%padList.length; } } }
+    const k=reduce?1:Math.min(1,dt*7); cur.x+=(target.x-cur.x)*k; cur.y+=(target.y-cur.y)*k;
+    let dx=cur.x-base.x, dy=cur.y-base.y, d=Math.hypot(dx,dy); const maxR=L1+L2-2, minR=Math.abs(L1-L2)+2;
+    if(d>maxR){ dx*=maxR/d; dy*=maxR/d; d=maxR; } if(d<minR){ dx*=minR/d; dy*=minR/d; d=minR; }
+    const a2=Math.acos(Math.max(-1,Math.min(1,(d*d-L1*L1-L2*L2)/(2*L1*L2))));
+    const a1=Math.atan2(dy,dx)-Math.atan2(L2*Math.sin(a2),L1+L2*Math.cos(a2));
+    const ex=base.x+L1*Math.cos(a1), ey=base.y+L1*Math.sin(a1), hx=ex+L2*Math.cos(a1+a2), hy=ey+L2*Math.sin(a1+a2);
+    l1.setAttribute('x2',ex); l1.setAttribute('y2',ey); j2.setAttribute('cx',ex); j2.setAttribute('cy',ey);
+    l2.setAttribute('x1',ex); l2.setAttribute('y1',ey); l2.setAttribute('x2',hx); l2.setAttribute('y2',hy);
+    tool.setAttribute('x1',hx); tool.setAttribute('y1',hy); tool.setAttribute('x2',hx); tool.setAttribute('y2',hy+22);
+    tip.setAttribute('cx',hx); tip.setAttribute('cy',hy+22);
+    let onPad=false; for(const p of padList){ if(Math.hypot(hx-p.x,hy+22-p.y)<9){ onPad=true; break; } }
+    tip.setAttribute('opacity',onPad?'1':'0');
+    if(onPad&&!reduce&&Math.random()<.5){ const s=document.createElementNS('http://www.w3.org/2000/svg','circle'); const ang=Math.random()*6.28, sp=30+Math.random()*60; s.setAttribute('r',1.5); s.setAttribute('fill','#FF7A3D'); s.dataset.vx=Math.cos(ang)*sp; s.dataset.vy=-Math.abs(Math.sin(ang))*sp-40; s.dataset.x=hx; s.dataset.y=hy+22; s.dataset.life=1; sparks.appendChild(s); }
+    for(const s of [...sparks.children]){ let life=+s.dataset.life-dt*2.2; if(life<=0){ s.remove(); continue; } s.dataset.life=life; s.dataset.vy=+s.dataset.vy+220*dt; s.dataset.x=+s.dataset.x+s.dataset.vx*dt; s.dataset.y=+s.dataset.y+s.dataset.vy*dt; s.setAttribute('cx',s.dataset.x); s.setAttribute('cy',s.dataset.y); s.setAttribute('opacity',life); }
+    readout.innerHTML=`θ1 ${(a1*180/Math.PI).toFixed(1)}°<br>θ2 ${(a2*180/Math.PI).toFixed(1)}°<br>${mode==='manual'?'tracking cursor':onPad?'soldering pad '+(nextPad+1):'moving to pad '+(nextPad+1)}`;
+    requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+})();
+
+/* 3. Rocket on the left rail tracks scroll, with exhaust proportional to how fast you scroll */
+(function(){
+  const rocket=document.getElementById('rocket'), prog=document.getElementById('prog'), c=document.getElementById('exhaust'), ctx=c.getContext('2d');
+  let parts=[], y=70, last=performance.now();
+  function size(){ const d=devicePixelRatio||1; c.width=90*d; c.height=innerHeight*d; ctx.setTransform(d,0,0,d,0,0); }
+  size(); addEventListener('resize',size);
+  function frame(now){
+    const dt=Math.min(.05,(now-last)/1000); last=now;
+    const max=document.documentElement.scrollHeight-innerHeight, t=max>0?Math.min(1,scrollY/max):0;
+    const ty=70+t*(innerHeight-150), vy=ty-y; y+=vy*(reduce?1:.18);
+    rocket.style.transform=`translateY(${y}px)`; prog.setAttribute('y2',String(((y+20)/innerHeight)*1000));
+    ctx.clearRect(0,0,90,innerHeight);
+    if(!reduce){
+      const thrust=Math.min(1,Math.abs(vy)/40)+.15;
+      for(let i=0;i<thrust*4;i++) parts.push({x:45+(Math.random()-.5)*6,y:y+44,vx:(Math.random()-.5)*20,vy:60+Math.random()*80,life:1,r:2+Math.random()*2.5});
+      parts=parts.filter(p=>p.life>0);
+      for(const p of parts){ p.life-=dt*1.8; p.x+=p.vx*dt; p.y+=p.vy*dt; ctx.fillStyle=p.life>.5?`rgba(255,122,61,${p.life})`:`rgba(86,225,255,${p.life*.8})`; ctx.beginPath(); ctx.arc(p.x,p.y,Math.max(0,p.r*p.life),0,7); ctx.fill(); }
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+
+/* 4. Counters and section rules when they scroll into view */
+(function(){
+  const fmt=n=>n.toLocaleString('en-US');
+  const io=new IntersectionObserver(es=>es.forEach(e=>{ if(!e.isIntersecting) return; io.unobserve(e.target); const el=e.target;
+    if(el.tagName==='H2'){ el.classList.add('on'); return; }
+    const end=+el.dataset.count, pre=el.dataset.prefix||'', suf=el.dataset.suffix||'';
+    if(reduce){ el.textContent=pre+fmt(end)+suf; return; }
+    const t0=performance.now(), dur=1100; (function tick(now){ const p=Math.min(1,(now-t0)/dur), v=Math.round(end*(1-Math.pow(1-p,3))); el.textContent=pre+fmt(v)+suf; if(p<1) requestAnimationFrame(tick); })(t0);
+  }),{threshold:.4});
+  document.querySelectorAll('[data-count], .head h2').forEach(el=>io.observe(el));
+})();
+</script>
 </body>
 </html>
